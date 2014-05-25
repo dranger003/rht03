@@ -1,4 +1,4 @@
-rht03.c
+rht03
 =======
 RHT03 Relative Humidity/Temperature Sensor RPi Protocol Implementation
 Copyright(C) 2014, Daniel Ranger
@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 The RHT03 (also known by DHT-22) is a low cost humidity and temperature
 sensor with a single wire digital interface. The sensor is calibrated
-and doesn�t require extra components so you can get right to measuring
+and doesn't require extra components so you can get right to measuring
 relative humidity and temperature.
 
 Compile with:
