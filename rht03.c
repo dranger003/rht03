@@ -69,7 +69,7 @@ void wait(uint32_t us)
 //		0		OK
 //		-1		Protocol error
 //		-2		Invalid checksum
-int rht03_read(double *rh, double *tp)
+extern int rht03_read(double *rh, double *tp)
 {
 	*rh = *tp = 0;
 
