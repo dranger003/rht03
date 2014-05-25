@@ -16,7 +16,6 @@ GNU General Public License for more details.<br />
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.<br />
 <br />
-<br />
 The RHT03 (also known by DHT-22) is a low cost humidity and temperature
 sensor with a single wire digital interface. The sensor is calibrated
 and doesn't require extra components so you can get right to measuring
