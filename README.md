@@ -21,15 +21,13 @@ sensor with a single wire digital interface. The sensor is calibrated
 and doesn't require extra components so you can get right to measuring
 relative humidity and temperature.<br />
 <br />
-Compile executable using:<br />
+Compile executable using:
 <pre>gcc -Wall -std=c99 rht03.c -o rht03 -lbcm2835</pre>
-<br />
-And shared library:<br />
+And shared library:
 <pre>
 gcc -Wall -std=c99 rht03.c -c -lbcm2835
 gcc -shared -o librht03.so rht03.o
 </pre>
-<br />
 RHT03 Digital Humidity & Temperature Sensor Homepage<br />
 http://www.humiditycn.com/cp22.html<br />
 <br />
