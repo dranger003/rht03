@@ -34,7 +34,7 @@ Datasheet/wire protocol (mirrors)<br />
 http://www.humiditycn.com/pic/20135318405067570.pdf<br />
 http://dlnmh9ip6v2uc.cloudfront.net/datasheets/Sensors/Weather/RHT03.pdf<br />
 <br />
-This software makes use of the C library for Broadcom BCM 2835 as used in<br />
+This software makes use of the C library for Broadcom BCM 2835 as used in
 Raspberry Pi<br />
 http://www.airspayce.com/mikem/bcm2835/<br />
 <br />
