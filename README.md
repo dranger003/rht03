@@ -25,8 +25,8 @@ Compile executable using:
 <pre>gcc -Wall -std=c99 rht03.c -o rht03 -lbcm2835</pre>
 And shared library:
 <pre>
-gcc -Wall -std=c99 rht03.c -c -lbcm2835
-gcc -shared -o librht03.so rht03.o
+gcc -Wall -std=c99 rht03.c -c
+gcc -shared -o librht03.so rht03.o -lbcm2835
 </pre>
 RHT03 Digital Humidity & Temperature Sensor Homepage<br />
 http://www.humiditycn.com/cp22.html<br />
