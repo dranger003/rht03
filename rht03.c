@@ -60,7 +60,7 @@ void wait(uint32_t us)
 	while (bcm2835_st_read() < t);
 }
 
-// rht03_read()
+// _rht03_read()
 //		Read sensor values
 // Parameters:
 //		*rh		Relative humidity value
@@ -69,7 +69,7 @@ void wait(uint32_t us)
 //		0		OK
 //		-1		Protocol error
 //		-2		Invalid checksum
-extern int rht03_read(double *rh, double *tp)
+int _rht03_read(double *rh, double *tp)
 {
 	*rh = *tp = 0;
 
@@ -92,17 +92,17 @@ extern int rht03_read(double *rh, double *tp)
 		uint64_t t = bcm2835_st_read() + TIMEOUT;
 		while (bcm2835_gpio_lev(PIN) != LOW)
 			if (bcm2835_st_read() > t)
-				return -1;
+				return -2;
 
 		t = bcm2835_st_read() + TIMEOUT;
 		while (bcm2835_gpio_lev(PIN) != HIGH)
 			if (bcm2835_st_read() > t)
-				return -1;
+				return -2;
 
 		t = bcm2835_st_read() + TIMEOUT;
 		while (bcm2835_gpio_lev(PIN) != LOW)
 			if (bcm2835_st_read() > t)
-				return -1;
+				return -2;
 	}
 
 	// Read/decode 40 bits w/bit value break at 70 uS
@@ -115,13 +115,13 @@ extern int rht03_read(double *rh, double *tp)
 
 			while (bcm2835_gpio_lev(PIN) != HIGH)
 				if (bcm2835_st_read() > t)
-					return -1;
+					return -2;
 
 			ts[i] = bcm2835_st_read();
 			{
 				while (bcm2835_gpio_lev(PIN) != LOW)
 					if (bcm2835_st_read() > t)
-						return -1;
+						return -2;
 			}
 			ts[i] = bcm2835_st_read() - ts[i];
 		}
@@ -144,7 +144,7 @@ extern int rht03_read(double *rh, double *tp)
 
 		// Validate checksum
 		if (((bytes[0] + bytes[1] + bytes[2] + bytes[3]) & 0xff) != bytes[4])
-			return -2;
+			return -3;
 
 		*rh = ((uint16_t)(bytes[0] << 8) + bytes[1]) / 10.0;
 		*tp = ((uint16_t)(bytes[2] << 8) + bytes[3]) / 10.0;
@@ -153,23 +153,42 @@ extern int rht03_read(double *rh, double *tp)
 	return 0;
 }
 
-int main(int argc, char *argv[])
+// rht03_read()
+//		Read sensor values
+// Parameters:
+//		*rh		Relative humidity value
+//		*tp		Temperature value
+// Returns:
+//		0		OK
+//		-1		Library initialization error
+//		-2		Protocol error
+//		-3		Invalid checksum
+int rht03_read(double *rh, double *tp)
 {
-	if (!bcm2835_init()) {
-		fprintf(stderr, "bcm2835_init(): Error initializing.\n");
+	if (!bcm2835_init())
 		return -1;
-	}
 
-	int res = 0, try_count = 0;
-	double rh, tp;
+	int res, tc = 0;
+	do {
+		res = _rht03_read(rh, tp);
+	} while (tc++ < MAX_TRY && res != 0);
 
-	// Try reading sensor values
-	while (try_count++ < MAX_TRY && (res = rht03_read(&rh, &tp)) != 0);
-
-	if (res == 0)
-		printf("T: %.2f C\nH: %.2f %%\n", tp, rh);
-
-	bcm2835_close();
+	if (!bcm2835_close())
+		return -1;
 
 	return res;
+}
+
+extern int rht03_read(double *, double *);
+
+int main(int argc, char *argv[])
+{
+	double rh, tp;
+	int res = rht03_read(&rh, &tp);
+	if (res == 0)
+		printf("T: %.2f C\nH: %.2f %%\n", tp, rh);
+	else
+		fprintf(stderr, "rht03_read(): %d\n", res);
+
+	return 0;
 }
